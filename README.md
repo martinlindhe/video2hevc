@@ -1,5 +1,3 @@
 # About
 
-WHY: grew tired of writing insane bash scripts.
-tried fish shell scripts, and got equally frustrated.
-so from now on we roll shell scripts in golang.
+"script" to convert input file to hevc/aac, using ffmpeg
