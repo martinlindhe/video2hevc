@@ -18,14 +18,9 @@ func videoToHevc(file string) error {
 
 	outName := findFreeOutFileName(file)
 
-	// find ffmpeg exec path, works on macos, debian
-	ffmpegPath, err := runCommandReturnStdout("/usr/bin/which ffmpeg")
+	ffmpegPath, err := exec.LookPath("ffmpeg")
 	if err != nil {
-		return fmt.Errorf("couldn't call which: %s", err)
-	}
-	ffmpegPath = strings.TrimSpace(ffmpegPath)
-	if ffmpegPath == "" {
-		return fmt.Errorf("could not find ffmpeg binary")
+		return err
 	}
 
 	arg := []string{"-i", file, "-c:v", "libx265", "-c:a", "libfdk_aac", outName}
