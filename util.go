@@ -57,12 +57,13 @@ func findFreeOutFileName(file string) string {
 
 	cnt := 0
 	res := ""
+	ext := path.Ext(file)
 	for {
 		res = path.Join(filepath.Dir(file), baseNameWithoutExt(file))
 		if cnt > 0 {
 			res += "-" + fmt.Sprintf("%02d", cnt)
 		}
-		res += ".mp4"
+		res += ext
 		if !exists(res) {
 			break
 		}
