@@ -1,4 +1,4 @@
-package main
+package video2hevc
 
 import (
 	"bufio"
@@ -10,7 +10,8 @@ import (
 	"strings"
 )
 
-func videoToHevc(file string) error {
+// VideoToHevc ...
+func VideoToHevc(file string) error {
 
 	if !exists(file) {
 		return fmt.Errorf("%s not found", file)
@@ -23,10 +24,7 @@ func videoToHevc(file string) error {
 		return err
 	}
 
-	arg := []string{"-i", file, "-c:v", "libx265", "-c:a", "libfdk_aac", outName}
-	fmt.Println("cmd:", ffmpegPath, strings.Join(arg, " "))
-
-	err = runInteractiveCommand(ffmpegPath, arg...)
+	err = runInteractiveCommand(ffmpegPath, "-i", file, "-c:v", "libx265", "-c:a", "libfdk_aac", outName)
 	if err != nil {
 		return fmt.Errorf("exec error: %s", err)
 	}
@@ -57,7 +55,7 @@ func findFreeOutFileName(file string) string {
 
 	cnt := 0
 	res := ""
-	ext := path.Ext(file)
+	ext := ".mp4"
 	for {
 		res = path.Join(filepath.Dir(file), baseNameWithoutExt(file))
 		if cnt > 0 {

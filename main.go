@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	video2hevc "github.com/martinlindhe/video2hevc/lib"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -17,7 +18,7 @@ func main() {
 	kingpin.CommandLine.HelpFlag.Short('h')
 	kingpin.Parse()
 
-	err := videoToHevc(*file)
+	err := video2hevc.VideoToHevc(*file)
 	if err != nil {
 		fmt.Println("error: ", err)
 		os.Exit(1)
