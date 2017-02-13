@@ -23,8 +23,16 @@ func VideoToHevc(file string) error {
 	if err != nil {
 		return err
 	}
+	aacLib := "copy"
 
-	err = runInteractiveCommand(ffmpegPath, "-i", file, "-c:v", "libx265", "-c:a", "libfdk_aac", outName)
+	parameters := []string{
+		"-i", file,
+		"-c:v", "libx265",
+		"-c:a", aacLib,
+		outName,
+	}
+
+	err = runInteractiveCommand(ffmpegPath, parameters...)
 	if err != nil {
 		return fmt.Errorf("exec error: %s", err)
 	}
