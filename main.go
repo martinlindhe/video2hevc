@@ -10,6 +10,7 @@ import (
 
 var (
 	file = kingpin.Arg("file", "Input file").Required().String()
+	aac  = kingpin.Flag("aac", "Force AAC audio").Bool()
 )
 
 func main() {
@@ -18,7 +19,7 @@ func main() {
 	kingpin.CommandLine.HelpFlag.Short('h')
 	kingpin.Parse()
 
-	err := video2hevc.VideoToHevc(*file)
+	err := video2hevc.VideoToHevc(*file, *aac)
 	if err != nil {
 		fmt.Println("error: ", err)
 		os.Exit(1)

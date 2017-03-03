@@ -11,7 +11,7 @@ import (
 )
 
 // VideoToHevc ...
-func VideoToHevc(file string) error {
+func VideoToHevc(file string, forceAAC bool) error {
 
 	if !exists(file) {
 		return fmt.Errorf("%s not found", file)
@@ -24,6 +24,9 @@ func VideoToHevc(file string) error {
 		return err
 	}
 	aacLib := "copy"
+	if forceAAC {
+		aacLib = "aac"
+	}
 
 	parameters := []string{
 		"-i", file,
