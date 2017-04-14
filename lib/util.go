@@ -11,7 +11,7 @@ import (
 )
 
 // VideoToHevc ...
-func VideoToHevc(file string, forceAAC bool) error {
+func VideoToHevc(file string, forceAAC bool, forceNVIDIA bool) error {
 
 	if !exists(file) {
 		return fmt.Errorf("%s not found", file)
@@ -28,9 +28,14 @@ func VideoToHevc(file string, forceAAC bool) error {
 		aacLib = "aac"
 	}
 
+	h265Lib := "libx265"
+	if forceNVIDIA {
+		h265Lib = "hevc_nvenc"
+	}
+
 	parameters := []string{
 		"-i", file,
-		"-c:v", "libx265",
+		"-c:v", h265Lib,
 		"-c:a", aacLib,
 		outName,
 	}
