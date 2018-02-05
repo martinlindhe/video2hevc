@@ -10,9 +10,8 @@ import (
 	"strings"
 )
 
-// VideoToHevc ...
-func VideoToHevc(file string, forceAAC bool, forceNVIDIA bool) error {
-
+// VideoToHevc encodes video `file` using command line `ffmpeg` tool
+func VideoToHevc(file string, verbose bool, forceAAC bool, forceAC3 bool, forceNVIDIA bool) error {
 	if !exists(file) {
 		return fmt.Errorf("%s not found", file)
 	}
@@ -23,23 +22,27 @@ func VideoToHevc(file string, forceAAC bool, forceNVIDIA bool) error {
 	if err != nil {
 		return err
 	}
-	aacLib := "copy"
+	audioLib := "copy"
 	if forceAAC {
-		aacLib = "aac"
+		audioLib = "aac"
 	}
-
-	h265Lib := "libx265"
+	if forceAC3 {
+		audioLib = "ac3"
+	}
+	videoLib := "libx265"
 	if forceNVIDIA {
-		h265Lib = "hevc_nvenc"
+		videoLib = "hevc_nvenc"
 	}
 
 	parameters := []string{
 		"-i", file,
-		"-c:v", h265Lib,
-		"-c:a", aacLib,
+		"-c:v", videoLib,
+		"-c:a", audioLib,
 		outName,
 	}
-
+	if verbose {
+		fmt.Println("Executing", ffmpegPath, strings.Join(parameters, " "))
+	}
 	err = runInteractiveCommand(ffmpegPath, parameters...)
 	if err != nil {
 		return fmt.Errorf("exec error: %s", err)
@@ -48,7 +51,6 @@ func VideoToHevc(file string, forceAAC bool, forceNVIDIA bool) error {
 }
 
 func baseNameWithoutExt(filename string) string {
-
 	s := filepath.Base(filename)
 	n := strings.LastIndexByte(s, '.')
 	if n >= 0 {
@@ -68,7 +70,6 @@ func exists(name string) bool {
 }
 
 func findFreeOutFileName(file string) string {
-
 	cnt := 0
 	res := ""
 	ext := ".mp4"
@@ -88,20 +89,15 @@ func findFreeOutFileName(file string) string {
 
 // interactive commands (ssh, vim)
 func runInteractiveCommand(name string, arg ...string) error {
-
 	cmd := exec.Command(name, arg...)
 	cmd.Stdout = os.Stdout
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = os.Stderr
 
-	if err := cmd.Run(); err != nil {
-		return err
-	}
-	return nil
+	return cmd.Run()
 }
 
 func runCommandReturnStdout(step string) (string, error) {
-
 	parts := strings.Split(step, " ")
 	cmd := exec.Command(parts[0], parts[1:]...)
 	res := ""
@@ -120,8 +116,5 @@ func runCommandReturnStdout(step string) (string, error) {
 	if err := cmd.Start(); err != nil {
 		return res, err
 	}
-	if err := cmd.Wait(); err != nil {
-		return res, err
-	}
-	return res, nil
+	return "", cmd.Wait()
 }

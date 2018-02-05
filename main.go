@@ -9,9 +9,11 @@ import (
 )
 
 var (
-	file   = kingpin.Arg("file", "Input file").Required().String()
-	aac    = kingpin.Flag("aac", "Force AAC audio").Bool()
-	nvidia = kingpin.Flag("nvidia", "Force NVIDIA acceleration").Bool()
+	file    = kingpin.Arg("file", "Input file").Required().String()
+	aac     = kingpin.Flag("aac", "Force AAC audio (default copies audio)").Bool()
+	ac3     = kingpin.Flag("ac3", "Force AC3 audio (default copies audio)").Bool()
+	nvidia  = kingpin.Flag("nvidia", "Force NVIDIA acceleration").Bool()
+	verbose = kingpin.Flag("verbose", "Be verbose").Short('v').Bool()
 )
 
 func main() {
@@ -20,7 +22,7 @@ func main() {
 	kingpin.CommandLine.HelpFlag.Short('h')
 	kingpin.Parse()
 
-	err := video2hevc.VideoToHevc(*file, *aac, *nvidia)
+	err := video2hevc.VideoToHevc(*file, *verbose, *aac, *ac3, *nvidia)
 	if err != nil {
 		fmt.Println("error: ", err)
 		os.Exit(1)
