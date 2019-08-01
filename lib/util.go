@@ -11,7 +11,7 @@ import (
 )
 
 // VideoToHevc encodes video `file` using command line `ffmpeg` tool
-func VideoToHevc(file string, verbose bool, forceAAC bool, forceAC3 bool, forceNVIDIA bool) error {
+func VideoToHevc(file string, verbose bool, forceAAC bool, forceAC3 bool, forceNVIDIA bool, v720 bool) error {
 	if !exists(file) {
 		return fmt.Errorf("%s not found", file)
 	}
@@ -38,8 +38,13 @@ func VideoToHevc(file string, verbose bool, forceAAC bool, forceAC3 bool, forceN
 		"-i", file,
 		"-c:v", videoLib,
 		"-c:a", audioLib,
-		outName,
 	}
+	if v720 {
+		// 1280 x 720
+		parameters = append(parameters, []string{"-vf", "scale=-1:720"}...)
+	}
+	parameters = append(parameters, outName)
+
 	if verbose {
 		fmt.Println("Executing", ffmpegPath, strings.Join(parameters, " "))
 	}
