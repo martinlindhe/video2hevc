@@ -10,8 +10,8 @@ import (
 
 var (
 	file    = kingpin.Arg("file", "Input file").Required().String()
-	aac     = kingpin.Flag("aac", "Force AAC audio (default copies audio)").Bool()
-	ac3     = kingpin.Flag("ac3", "Force AC3 audio (default copies audio)").Bool()
+	aac     = kingpin.Flag("aac", "Force AAC audio (better quality then ac3)").Bool()
+	ac3     = kingpin.Flag("ac3", "Force AC3 audio").Bool()
 	nvidia  = kingpin.Flag("nvidia", "Force NVIDIA acceleration").Bool()
 	verbose = kingpin.Flag("verbose", "Be verbose").Short('v').Bool()
 	v720    = kingpin.Flag("v720", "Convert video yo 720p").Bool()

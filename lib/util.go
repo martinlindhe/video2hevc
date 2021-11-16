@@ -1,7 +1,6 @@
 package video2hevc
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 	"os/exec"
@@ -43,6 +42,10 @@ func VideoToHevc(file string, verbose bool, forceAAC bool, forceAC3 bool, forceN
 		// 1280 x 720
 		parameters = append(parameters, []string{"-vf", "scale=-1:720"}...)
 	}
+	if verbose {
+		parameters = append(parameters, []string{"-loglevel", "verbose"}...)
+	}
+
 	parameters = append(parameters, outName)
 
 	if verbose {
@@ -100,26 +103,4 @@ func runInteractiveCommand(name string, arg ...string) error {
 	cmd.Stderr = os.Stderr
 
 	return cmd.Run()
-}
-
-func runCommandReturnStdout(step string) (string, error) {
-	parts := strings.Split(step, " ")
-	cmd := exec.Command(parts[0], parts[1:]...)
-	res := ""
-
-	stdOutReader, err := cmd.StdoutPipe()
-	if err != nil {
-		return res, err
-	}
-	stdOutScanner := bufio.NewScanner(stdOutReader)
-	go func() {
-		for stdOutScanner.Scan() {
-			res += string(stdOutScanner.Bytes()) + "\n"
-		}
-	}()
-
-	if err := cmd.Start(); err != nil {
-		return res, err
-	}
-	return "", cmd.Wait()
 }
