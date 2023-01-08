@@ -15,6 +15,7 @@ type VideoToHevcSettings struct {
 	ForceNVIDIA bool
 	Verbose     bool
 	Force720    bool
+	Threads     int
 }
 
 // VideoToHevc encodes video `file` using command line `ffmpeg` tool
@@ -50,6 +51,11 @@ func VideoToHevc(file string, settings VideoToHevcSettings) error {
 		// 1280 x 720
 		parameters = append(parameters, []string{"-vf", "scale=-1:720"}...)
 	}
+
+	if settings.Threads != 0 {
+		parameters = append(parameters, []string{"-threads", fmt.Sprintf("%d", settings.Threads)}...)
+	}
+
 	if settings.Verbose {
 		parameters = append(parameters, []string{"-loglevel", "verbose"}...)
 	}

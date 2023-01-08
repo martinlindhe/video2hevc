@@ -15,6 +15,7 @@ var (
 	nvidia  = kingpin.Flag("nvidia", "Force NVIDIA acceleration").Bool()
 	verbose = kingpin.Flag("verbose", "Be verbose").Short('v').Bool()
 	v720    = kingpin.Flag("v720", "Convert video to 720p").Bool()
+	threads = kingpin.Flag("threads", "Number of threads").Default("0").Int()
 )
 
 func main() {
@@ -29,6 +30,7 @@ func main() {
 		ForceNVIDIA: *nvidia,
 		Verbose:     *verbose,
 		Force720:    *v720,
+		Threads:     *threads,
 	}
 
 	err := video2hevc.VideoToHevc(*file, settings)
