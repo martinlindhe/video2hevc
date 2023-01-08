@@ -9,8 +9,16 @@ import (
 	"strings"
 )
 
+type VideoToHevcSettings struct {
+	ForceAAC    bool
+	ForceAC3    bool
+	ForceNVIDIA bool
+	Verbose     bool
+	Force720    bool
+}
+
 // VideoToHevc encodes video `file` using command line `ffmpeg` tool
-func VideoToHevc(file string, verbose bool, forceAAC bool, forceAC3 bool, forceNVIDIA bool, v720 bool) error {
+func VideoToHevc(file string, settings VideoToHevcSettings) error {
 	if !exists(file) {
 		return fmt.Errorf("%s not found", file)
 	}
@@ -22,14 +30,14 @@ func VideoToHevc(file string, verbose bool, forceAAC bool, forceAC3 bool, forceN
 		return err
 	}
 	audioLib := "copy"
-	if forceAAC {
+	if settings.ForceAAC {
 		audioLib = "aac"
 	}
-	if forceAC3 {
+	if settings.ForceAC3 {
 		audioLib = "ac3"
 	}
 	videoLib := "libx265"
-	if forceNVIDIA {
+	if settings.ForceNVIDIA {
 		videoLib = "hevc_nvenc"
 	}
 
@@ -38,17 +46,17 @@ func VideoToHevc(file string, verbose bool, forceAAC bool, forceAC3 bool, forceN
 		"-c:v", videoLib,
 		"-c:a", audioLib,
 	}
-	if v720 {
+	if settings.Force720 {
 		// 1280 x 720
 		parameters = append(parameters, []string{"-vf", "scale=-1:720"}...)
 	}
-	if verbose {
+	if settings.Verbose {
 		parameters = append(parameters, []string{"-loglevel", "verbose"}...)
 	}
 
 	parameters = append(parameters, outName)
 
-	if verbose {
+	if settings.Verbose {
 		fmt.Println("Executing", ffmpegPath, strings.Join(parameters, " "))
 	}
 	err = runInteractiveCommand(ffmpegPath, parameters...)
