@@ -44,16 +44,19 @@ func VideoToHevc(file string, settings VideoToHevcSettings) error {
 
 	parameters := []string{
 		"-i", file,
-		"-c:v", videoLib,
-		"-c:a", audioLib,
-	}
-	if settings.Force720 {
-		// 1280 x 720
-		parameters = append(parameters, []string{"-vf", "scale=-1:720"}...)
 	}
 
 	if settings.Threads != 0 {
 		parameters = append(parameters, []string{"-threads", fmt.Sprintf("%d", settings.Threads)}...)
+	}
+	parameters = append(parameters, []string{
+		"-c:v", videoLib,
+		"-c:a", audioLib,
+	}...)
+
+	if settings.Force720 {
+		// 1280 x 720
+		parameters = append(parameters, []string{"-vf", "scale=-1:720"}...)
 	}
 
 	if settings.Verbose {
