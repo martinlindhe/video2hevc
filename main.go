@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/alecthomas/kingpin/v2"
 	video2hevc "github.com/martinlindhe/video2hevc/lib"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 var (
@@ -14,7 +14,7 @@ var (
 	ac3     = kingpin.Flag("ac3", "Force AC3 audio").Bool()
 	nvidia  = kingpin.Flag("nvidia", "Force NVIDIA acceleration").Bool()
 	verbose = kingpin.Flag("verbose", "Be verbose").Short('v').Bool()
-	v720    = kingpin.Flag("v720", "Convert video to 720p").Bool()
+	v720    = kingpin.Flag("720", "Convert video to 720p").Bool()
 	threads = kingpin.Flag("threads", "Number of threads").Default("0").Int()
 )
 

@@ -55,7 +55,6 @@ func VideoToHevc(file string, settings VideoToHevcSettings) error {
 	}...)
 
 	if settings.Force720 {
-		// 1280 x 720
 		parameters = append(parameters, []string{"-vf", "scale=-1:720"}...)
 	}
 
