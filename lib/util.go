@@ -43,6 +43,8 @@ func VideoToHevc(file string, settings VideoToHevcSettings) error {
 	}
 
 	parameters := []string{
+		"-hide_banner",
+		"-stats",
 		"-i", file,
 	}
 
@@ -60,6 +62,8 @@ func VideoToHevc(file string, settings VideoToHevcSettings) error {
 
 	if settings.Verbose {
 		parameters = append(parameters, []string{"-loglevel", "verbose"}...)
+	} else {
+		parameters = append(parameters, []string{"-loglevel", "warning"}...)
 	}
 
 	parameters = append(parameters, outName)
