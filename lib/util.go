@@ -15,6 +15,7 @@ type VideoToHevcSettings struct {
 	ForceNVIDIA bool
 	Verbose     bool
 	Force720    bool
+	Force1080   bool
 	Threads     int
 }
 
@@ -56,8 +57,15 @@ func VideoToHevc(file string, settings VideoToHevcSettings) error {
 		"-c:a", audioLib,
 	}...)
 
+	if settings.Force720 && settings.Force1080 {
+		return fmt.Errorf("--720 and --1080 are mutually exclusive")
+	}
+
 	if settings.Force720 {
-		parameters = append(parameters, []string{"-vf", "scale=-1:720"}...)
+		parameters = append(parameters, []string{"-vf", "scale=-2:720"}...)
+	}
+	if settings.Force1080 {
+		parameters = append(parameters, []string{"-vf", "scale=-2:1080"}...)
 	}
 
 	if settings.Verbose {

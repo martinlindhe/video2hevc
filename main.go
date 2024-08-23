@@ -15,6 +15,7 @@ var (
 	nvidia  = kingpin.Flag("nvidia", "Force NVIDIA acceleration").Bool()
 	verbose = kingpin.Flag("verbose", "Be verbose").Short('v').Bool()
 	v720    = kingpin.Flag("720", "Convert video to 720p").Bool()
+	v1080   = kingpin.Flag("1080", "Convert video to 1080p").Bool()
 	threads = kingpin.Flag("threads", "Number of threads").Default("0").Int()
 )
 
@@ -30,6 +31,7 @@ func main() {
 		ForceNVIDIA: *nvidia,
 		Verbose:     *verbose,
 		Force720:    *v720,
+		Force1080:   *v1080,
 		Threads:     *threads,
 	}
 
