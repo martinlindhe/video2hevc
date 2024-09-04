@@ -71,7 +71,7 @@ func VideoToHevc(file string, settings VideoToHevcSettings) error {
 	if settings.Verbose {
 		parameters = append(parameters, []string{"-loglevel", "verbose"}...)
 	} else {
-		parameters = append(parameters, []string{"-loglevel", "warning"}...)
+		parameters = append(parameters, []string{"-loglevel", "error"}...)
 	}
 
 	parameters = append(parameters, outName)
@@ -79,6 +79,8 @@ func VideoToHevc(file string, settings VideoToHevcSettings) error {
 	if settings.Verbose {
 		fmt.Println("Executing", ffmpegPath, strings.Join(parameters, " "))
 	}
+
+	fmt.Printf("Processing %s ...\n", file)
 	err = runInteractiveCommand(ffmpegPath, parameters...)
 	if err != nil {
 		return fmt.Errorf("exec error: %s", err)
